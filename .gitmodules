@@ -1,0 +1,3 @@
+[submodule "crates/vterm-common"]
+	path = crates/vterm-common
+	url = https://github.com/aurga-vibeterminal/vterm-common.git
