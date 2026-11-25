@@ -1,0 +1,9 @@
+{
+  "id": "opencode",
+  "name": "OpenCode",
+  "description": "Detects OpenCode busy/idle states automatically from classic and Mini spinner heartbeats.",
+  "author": "Vibe Terminal",
+  "email": "dev@vterminal.dev",
+  "date": "2026-11-05",
+  "type": "app"
+}

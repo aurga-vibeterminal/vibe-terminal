@@ -1,0 +1,9 @@
+{
+  "id": "pi",
+  "name": "Pi Agent",
+  "description": "Detects Pi Agent states through OSC 9;4 and OSC 7501, with braille working-indicator heartbeats as an automatic Busy/Idle fallback.",
+  "author": "Vibe Terminal",
+  "email": "dev@vterminal.dev",
+  "date": "2026-11-05",
+  "type": "app"
+}

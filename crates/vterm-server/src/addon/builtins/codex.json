@@ -1,0 +1,9 @@
+{
+    "id": "codex",
+    "name": "Codex",
+    "description": "Detects Codex terminal activity and prompt states",
+    "author": "Vibe Terminal",
+    "email": "dev@vterminal.dev",
+    "date": "2026-05-11",
+    "type": "app"
+}

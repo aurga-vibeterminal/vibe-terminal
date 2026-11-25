@@ -1,0 +1,9 @@
+{
+  "id": "qwen-code",
+  "name": "Qwen Code",
+  "description": "Detects Qwen Code tool execution and idle states through OSC 9;4, including model-only responses through the braille spinner.",
+  "author": "Vibe Terminal",
+  "email": "dev@vterminal.dev",
+  "date": "2026-11-05",
+  "type": "app"
+}

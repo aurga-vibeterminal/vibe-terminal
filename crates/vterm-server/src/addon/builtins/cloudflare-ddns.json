@@ -1,0 +1,41 @@
+{
+    "id": "cloudflare-ddns",
+    "name": "Cloudflare DDNS",
+    "description": "Updates Cloudflare DNS records with your current IP address",
+    "author": "Vibe Terminal",
+    "email": "dev@vterminal.dev",
+    "date": "2025-05-01",
+    "type": "ddns",
+    "config_fields": [
+        {
+            "key": "email",
+            "label": "Email",
+            "field_type": "text",
+            "required": true,
+            "default_value": "",
+            "description": "Cloudflare account email address"
+        },
+        {
+            "key": "api_key",
+            "label": "API Token",
+            "field_type": "password",
+            "required": true,
+            "description": "Cloudflare API token with DNS edit permissions"
+        },
+        {
+            "key": "domain",
+            "label": "Domain",
+            "field_type": "text",
+            "required": true,
+            "description": "Zone root domain (e.g. example.com)"
+        },
+        {
+            "key": "subdomain",
+            "label": "Subdomain",
+            "field_type": "text",
+            "required": false,
+            "default_value": "",
+            "description": "Subdomain record names separated by semicolons (; leave empty for root domain)"
+        }
+    ]
+}

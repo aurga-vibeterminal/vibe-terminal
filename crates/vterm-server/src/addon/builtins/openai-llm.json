@@ -1,0 +1,77 @@
+{
+  "id": "openai-llm",
+  "name": "OpenAI Compatible LLM",
+  "description": "OpenAI compatible chat API for terminal state classification",
+  "author": "Vibe Terminal",
+  "email": "dev@vterminal.dev",
+  "date": "2025-05-10",
+  "type": "llm",
+  "config_fields": [
+    {
+      "key": "api_key",
+      "label": "API Key",
+      "field_type": "password",
+      "required": false,
+      "description": "API key for authentication (leave empty if not required)"
+    },
+    {
+      "key": "base_url",
+      "label": "Base URL",
+      "field_type": "text",
+      "required": true,
+      "default": "https://api.deepseek.com/v1"
+    },
+    {
+      "key": "model",
+      "label": "Model",
+      "field_type": "text",
+      "required": true,
+      "default": "deepseek-flash"
+    },
+    {
+      "key": "extra_body",
+      "label": "Extra Body",
+      "field_type": "textarea",
+      "required": false,
+      "description": "JSON object merged into the completion request body. Use to add model-specific parameters, e.g. {\"extra_body\": {\"enable_thinking\": false}} for Qwen, {\"thinking\": {\"type\": \"disabled\"}} for DeepSeek"
+    },
+    {
+      "key": "temperature",
+      "label": "Temperature",
+      "field_type": "number",
+      "required": false,
+      "default": "0.7"
+    },
+    {
+      "key": "max_input_tokens",
+      "label": "Max Input Tokens",
+      "field_type": "integer",
+      "required": false,
+      "default": "128000",
+      "description": "Maximum number of input tokens used when preparing prompts and agent context."
+    },
+    {
+      "key": "max_output_tokens",
+      "label": "Max Output Tokens",
+      "field_type": "integer",
+      "required": false,
+      "default": "4096",
+      "description": "Maximum number of completion tokens requested from the model."
+    },
+    {
+      "key": "timeout",
+      "label": "Timeout (seconds)",
+      "field_type": "integer",
+      "required": false,
+      "default": "60",
+      "description": "Per-request timeout in seconds applied to every HTTP call this addon makes. Increase it for slow models."
+    },
+    {
+      "key": "system_prompt",
+      "label": "System Prompt",
+      "field_type": "textarea",
+      "required": false,
+      "description": "Default system message to prepend"
+    }
+  ]
+}

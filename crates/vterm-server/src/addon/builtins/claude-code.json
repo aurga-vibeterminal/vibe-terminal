@@ -1,0 +1,9 @@
+{
+    "id": "claude-code",
+    "name": "Claude Code",
+    "description": "Detects Claude Code terminal activity and prompt states",
+    "author": "Vibe Terminal",
+    "email": "dev@vterminal.dev",
+    "date": "2025-05-01",
+    "type": "app"
+}

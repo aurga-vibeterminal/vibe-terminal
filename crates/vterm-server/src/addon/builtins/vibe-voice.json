@@ -1,0 +1,41 @@
+{
+  "id": "vibe-voice",
+  "name": "Vibe Voice",
+  "description": "Local speech-to-text via the Vibe Voice process supervised by Vibe Terminal",
+  "author": "Vibe Terminal",
+  "email": "dev@vterminal.dev",
+  "date": "2026-07-19",
+  "type": "asr",
+  "config_fields": [
+    {
+      "key": "base_url",
+      "label": "Base URL",
+      "field_type": "text",
+      "required": true,
+      "default": "https://127.0.0.1:8398",
+      "description": "URL of the local Vibe Voice. Mirrors the Local ASR Server bind/port setting."
+    },
+    {
+      "key": "access_token",
+      "label": "Access Token",
+      "field_type": "password",
+      "required": false,
+      "description": "Bearer token for the ASR server. Leave empty if no token is configured. For the local supervised server this mirrors the Local ASR Server card; for remote servers, set the token they expect."
+    },
+    {
+      "key": "language",
+      "label": "Language",
+      "field_type": "text",
+      "required": false,
+      "default": "auto",
+      "description": "Language hint sent to the ASR server on every transcription. Use 'auto' to let the server auto-detect, or a specific name (Chinese, English, Japanese, ...)."
+    },
+    {
+      "key": "timeout_secs",
+      "label": "Request Timeout (seconds)",
+      "field_type": "integer",
+      "required": false,
+      "default": "180"
+    }
+  ]
+}

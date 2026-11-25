@@ -1,0 +1,141 @@
+[package]
+name = "vterm-server"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "vterm-server"
+path = "src/main.rs"
+
+# Development binary: built only with `cargo build --features dev` (the
+# `dev` feature makes build.rs set the DEVELOPMENT cfg — dev data dir/ports).
+# Same code, separate path so Cargo doesn't warn about shared target files.
+[[bin]]
+name = "vterm-server-dev"
+path = "src/main_dev.rs"
+required-features = ["dev"]
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ["cfg(DEVELOPMENT)"] }
+
+[features]
+default = []
+# Development build: -dev binary name + DEVELOPMENT cfg (see build.rs).
+dev = []
+# windows-sys is unconditional on Windows: the native crash handler in
+# `diagnostics` needs SetUnhandledExceptionFilter in headless builds too.
+
+[dependencies]
+vterm-common = { workspace = true }
+vterm-core = { workspace = true }
+vterm-transport = { workspace = true }
+vterm-agent = { workspace = true }
+
+# Async runtime
+tokio = { workspace = true }
+futures-util = { workspace = true }
+tokio-tungstenite = { workspace = true }
+tokio-rustls = { workspace = true }
+rustls = { workspace = true }
+rustls-pemfile = { workspace = true }
+hyper-util = { workspace = true }
+socket2 = { workspace = true }
+async-trait = "0.1"
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+rusqlite = { version = "0.32", features = ["bundled"] }
+if-addrs = "0.13"
+serialport = "4.7"
+regex = "1"
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# .gitignore-aware directory walking (tree-mode filename search)
+ignore = { version = "0.4.26" }
+notify = "6.1"
+
+# Compile-time asset embedding for the wwwroot (config/wwwroot.rs)
+rust-embed = { workspace = true }
+
+# Compression
+flate2 = { workspace = true }
+zstd = { workspace = true }
+zip = { version = "2.2", default-features = false, features = ["deflate"] }
+
+# Addon JS runtime
+rquickjs = { version = "0.8", features = ["loader", "futures", "macro"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls", "stream"] }
+
+# MCP (Model Context Protocol)
+rmcp = { workspace = true }
+axum = { workspace = true }
+schemars = { workspace = true }
+
+# Logging
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+chrono = "0.4"
+uuid = { workspace = true }
+dirs = "6"
+single-instance = { workspace = true }
+aes-gcm = "0.10"
+machine-uid = "0.5"
+gethostname = "1.1"
+rand = "0.8"
+clap = { workspace = true }
+sha1 = "0.10"
+sha2 = "0.10"
+base64 = "0.22"
+
+[build-dependencies]
+# Embeds FileVersion/ProductVersion/LegalCopyright into the executable
+# (build.rs).
+vterm-build = { workspace = true }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+# Not optional: the native crash handler (SetUnhandledExceptionFilter) in
+# `diagnostics` runs in headless builds too.
+windows-sys = { version = "0.61.2", features = ["Win32_Devices_DeviceAndDriverInstallation", "Win32_Foundation", "Win32_Globalization", "Win32_Graphics_Gdi", "Win32_Networking_WinSock", "Win32_Security", "Win32_Storage_FileSystem", "Win32_System_Console", "Win32_System_Diagnostics_Debug", "Win32_System_Diagnostics_ToolHelp", "Win32_System_Ioctl", "Win32_System_JobObjects", "Win32_System_Kernel", "Win32_System_LibraryLoader", "Win32_System_Registry", "Win32_System_Services", "Win32_System_Threading", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging"] }
+windows = { version = "0.62.2", features = ["Win32_Foundation", "Win32_System_Pipes", "Win32_Storage_FileSystem"] }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+# Unconditional (not tied to the `ui` feature): autostart.rs talks to
+# SMAppService through the Objective-C runtime in headless builds too.
+objc = "0.2"
+# volume_watch.rs drives DiskArbitration from a CFRunLoop thread.
+core-foundation = "0.9"
+
+[dev-dependencies]
+tempfile = "3"
+tokio = { workspace = true, features = ["test-util"] }
+# Self-signed test certificates for the reverse-proxy TLS tests (rustls path).
+rcgen = { workspace = true }
+# Drives the MCP auth middleware router in `mcp::auth` tests via
+# `ServiceExt::oneshot` (same version axum pulls in; no extra download).
+tower = { version = "0.5", features = ["util"] }
+
+# rquickjs-sys ships no pregenerated bindings for 32-bit ARM or riscv64;
+# generate them at build time instead (requires libclang on the build host —
+# see docker/).
+# Kept at the end of the file: a [target...] table swallows every key after
+# it, so it must not sit inside [dependencies].
+[target.'cfg(target_arch = "arm")'.dependencies]
+rquickjs = { version = "0.8", features = ["loader", "futures", "macro", "bindgen"] }
+
+[target.'cfg(target_arch = "riscv64")'.dependencies]
+rquickjs = { version = "0.8", features = ["loader", "futures", "macro", "bindgen"] }
+
+# rquickjs-sys also ships no pregenerated bindings for Windows-on-ARM64
+# (aarch64-pc-windows-msvc) — same bindgen treatment (needs LLVM/clang on
+# the x64 cross-build host).
+[target.'cfg(all(target_os = "windows", target_arch = "aarch64"))'.dependencies]
+rquickjs = { version = "0.8", features = ["loader", "futures", "macro", "bindgen"] }

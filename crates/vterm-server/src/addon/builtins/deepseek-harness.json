@@ -1,0 +1,9 @@
+{
+  "id": "deepseek-harness",
+  "name": "DeepSeek Harness",
+  "description": "Detects DeepSeek Harness dsh-tui busy/idle states through OSC 9;4. Project: https://github.com/aurga-vibeterminal/dsh-tui.git. Install: dsh plugin --profile tui add github:aurga-vibeterminal/dsh-tui (or dsh plugin --profile tui add D:\\path\\to\\dsh-tui for a local checkout), then run dsh tui.",
+  "author": "Vibe Terminal",
+  "email": "dev@vterminal.dev",
+  "date": "2026-10-28",
+  "type": "app"
+}

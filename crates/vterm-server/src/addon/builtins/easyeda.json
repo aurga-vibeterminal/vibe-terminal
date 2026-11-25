@@ -1,0 +1,19 @@
+{
+  "id": "easyeda",
+  "name": "EasyEDA Pro MCP (Experimental)",
+  "description": "MCP tool surface for EasyEDA Pro (嘉立创EDA专业版). Serves a small fixed tool set plus a searchable catalog of eda.* API calls, bridged to the EDA connector extension over WebSocket.",
+  "author": "Vibe Terminal",
+  "email": "dev@vterminal.dev",
+  "date": "2026-09-28",
+  "type": "mcp",
+  "config_fields": [
+    {
+      "key": "timeout",
+      "label": "Timeout (seconds)",
+      "field_type": "integer",
+      "required": false,
+      "default": "120",
+      "description": "Per-request timeout in seconds applied to every bridge request sent to the EDA connector. Increase it for slow EDA operations."
+    }
+  ]
+}

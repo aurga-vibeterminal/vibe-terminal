@@ -1,0 +1,9 @@
+{
+    "id": "kimi-code",
+    "name": "Kimi Code",
+    "description": "Detects Kimi Code terminal activity and prompt states",
+    "author": "Vibe Terminal",
+    "email": "dev@vterminal.dev",
+    "date": "2026-06-23",
+    "type": "app"
+}
