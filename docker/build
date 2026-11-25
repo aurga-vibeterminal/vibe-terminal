@@ -1,0 +1,161 @@
+#!/bin/bash
+# Host-side orchestrator for the headless Linux build matrix.
+# Usage: docker/build [headless] [x64|x86|arm64|arm|riscv|all]   (default: x64)
+set -euo pipefail
+
+BASEDIR=$(cd "$(dirname "$0")" && pwd)
+SRC=$(cd "$BASEDIR/.." && pwd)
+PROXY="${PROXY:-}"   # optional HTTP(S) proxy for downloads; no default
+
+host_path() {
+    if command -v cygpath >/dev/null 2>&1; then
+        cygpath -m "$1"
+    else
+        printf '%s\n' "$1"
+    fi
+}
+
+DOCKER_BASEDIR="$(host_path "$BASEDIR")"
+DOCKER_SRC="$(host_path "$SRC")"
+CATEGORY="${1:-headless}"
+ARCHES="${2:-x64}"
+
+if [ "$CATEGORY" != "headless" ]; then
+    echo "only the headless category is available in this source tree" >&2
+    exit 1
+fi
+case "$ARCHES" in
+    all) ARCHES="x64 x86 arm64 arm riscv" ;;
+esac
+
+UNPUSHED=0
+if git -C "$SRC" rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' >/dev/null 2>&1; then
+    if [[ "$(git -C "$SRC" rev-list --count '@{upstream}..HEAD')" != "0" ]]; then
+        UNPUSHED=1
+    fi
+elif ! git -C "$SRC" branch -r --contains HEAD | grep -q .; then
+    UNPUSHED=1
+fi
+if [[ "$UNPUSHED" == 1 ]]; then
+    echo "WARNING: this repository has commits that are not pushed."
+    CONTINUE_UNPUSHED=N
+    read -r -p "Continue building with unpushed commits? [y/N] " CONTINUE_UNPUSHED || CONTINUE_UNPUSHED=N
+    if [[ "$CONTINUE_UNPUSHED" != [yY] ]]; then
+        echo "Build cancelled; push the commits first or explicitly choose y." >&2
+        exit 1
+    fi
+fi
+
+sync_repository() {
+    local repo="$1" head branch upstream remote_branches
+    head="$(git -C "$repo" rev-parse --short HEAD)" || return 1
+    if ! branch="$(git -C "$repo" symbolic-ref --short HEAD)"; then
+        echo "Cannot sync $repo: HEAD is detached at $head; check out a branch first." >&2
+        return 1
+    fi
+    upstream="$(git -C "$repo" rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null)" || upstream="(none)"
+    echo "==> Syncing $repo (branch: $branch; HEAD: $head; upstream: $upstream)"
+    git -C "$repo" fetch origin --prune || return 1
+    if ! remote_branches="$(git -C "$repo" branch -r --contains HEAD --format='%(refname:short)')"; then
+        return 1
+    fi
+    if [ -n "$remote_branches" ]; then
+        git -C "$repo" pull --rebase --autostash || return 1
+    else
+        git -C "$repo" rebase --autostash "origin/$branch" || return 1
+    fi
+}
+
+sync_repository "$SRC" || exit 1
+
+mkdir -p "$SRC/.docker-cache/cargo"
+# Optional: mount the host's ~/.git-credentials into the build container
+# (read-only) so cargo can fetch private git dependencies. Off by default —
+# the workspace has no git dependencies and the file stores tokens in clear
+# text. Enable explicitly with MOUNT_GIT_CREDENTIALS=1.
+GIT_CRED_ARGS=()
+if [ "${MOUNT_GIT_CREDENTIALS:-0}" = "1" ] && [ -f "$HOME/.git-credentials" ]; then
+    GIT_CRED_ARGS=(-v "$(host_path "$HOME/.git-credentials"):/tmp/.git-credentials:ro")
+fi
+
+echo "=== building webui on the host ==="
+(cd "$SRC/webui" && npm install && npm run build)
+
+norm_target() {
+    case "$1" in
+        x64) echo x64 ;;
+        x86) echo x86 ;;
+        arm64) echo arm64 ;;
+        arm) echo arm32 ;;
+        riscv) echo riscv64 ;;
+        *) echo "unknown arch: $1 (use x64|x86|arm64|arm|riscv)" >&2; return 1 ;;
+    esac
+}
+
+IMAGE_OF()      { case "$1" in bionic) echo vibe-terminal-build-env ;; jammy) echo vibe-terminal-build-desktop ;; esac; }
+DOCKERFILE_OF() { case "$1" in bionic) echo Dockerfile ;; jammy) echo Dockerfile.desktop ;; esac; }
+
+ensure_image() {
+    local image="$1" df="$2" name value
+    if [ -n "${REBUILD:-}" ] || ! docker image inspect "$image" >/dev/null 2>&1; then
+        echo "=== building docker image $image ==="
+        # Forward optional build arguments only when set, so the Dockerfile
+        # defaults stay in effect otherwise (an empty --build-arg overrides).
+        local build_args=(--build-arg PROXY="$PROXY")
+        for name in UBUNTU_MIRROR UBUNTU_PORTS_MIRROR RUSTUP_DIST_SERVER RUSTUP_UPDATE_ROOT; do
+            value="${!name:-}"
+            if [ -n "$value" ]; then
+                build_args+=(--build-arg "$name=$value")
+            fi
+        done
+        docker build --network=host "${build_args[@]}" \
+            -t "$image" -f "$DOCKER_BASEDIR/$df" "$DOCKER_BASEDIR"
+    fi
+}
+
+run_component() {
+    local imagekey="$1" target="$2" image dockerfile
+    image="$(IMAGE_OF "$imagekey")"
+    dockerfile="$(DOCKERFILE_OF "$imagekey")"
+    ensure_image "$image" "$dockerfile"
+
+    echo "=== [headless/$target] $imagekey ==="
+    local proxy_env=()
+    if [ -n "$PROXY" ]; then
+        proxy_env=(-e "http_proxy=$PROXY" -e "https_proxy=$PROXY" -e "HTTP_PROXY=$PROXY" -e "HTTPS_PROXY=$PROXY")
+    fi
+    docker run --rm --network=host \
+        -u "$(id -u):$(id -g)" \
+        -e HOME=/tmp \
+        "${proxy_env[@]}" \
+        -v "$DOCKER_SRC:/src" \
+        -v "$(host_path "$SRC/.docker-cache/cargo"):/opt/cargo-cache" \
+        -v "$(host_path "$HOME/.cargo/git"):/opt/cargo-cache/git" \
+        "${GIT_CRED_ARGS[@]}" \
+        "$image" \
+        bash "/src/docker/build_inner.sh" "$target"
+}
+
+for SHORT in $ARCHES; do
+    TARGET="$(norm_target "$SHORT")"
+    case "$SHORT" in
+        riscv) IMAGE_KEY=jammy; BASELINE=2.35 ;;
+        *) IMAGE_KEY=bionic; BASELINE=2.27 ;;
+    esac
+    echo ""
+    echo "############ building headless / $SHORT ############"
+    rm -rf "$SRC/output/headless/$SHORT"
+    run_component "$IMAGE_KEY" "$TARGET"
+    echo "=== packaging headless/$SHORT (baseline glibc $BASELINE) ==="
+    bash "$SRC/packaging/linux/package.sh" --skip-build \
+        --variant headless --arch "$TARGET" \
+        --bin-dir "$SRC/output/headless/$SHORT" \
+        --baseline "$BASELINE"
+done
+
+echo ""
+echo "=== staged binaries (output/headless/) ==="
+find "$SRC/output/headless" -type f 2>/dev/null | sort | sed "s#$SRC/##" || true
+echo ""
+echo "=== packages (dist/linux/, flat) ==="
+find "$SRC/dist/linux" -maxdepth 1 -type f \( -name '*.deb' -o -name '*.rpm' -o -name '*.tar.gz' \) 2>/dev/null | sort | sed "s#$SRC/##" || true

@@ -1,0 +1,58 @@
+// Encoding names are intentionally NOT translated: language-specific entries
+// use their own language (e.g. 简体中文, 日本語, Кириллица), mirroring
+// crates/vterm/src/ui/encoding.rs. Only the "Auto" entry is localized by
+// callers through `terminalEncodingOptionsWithAuto`.
+export const terminalEncodingOptions = [
+  { value: 'utf8', label: 'UTF-8' },
+  { value: 'utf16le', label: 'UTF-16 LE' },
+  { value: 'utf16be', label: 'UTF-16 BE' },
+  { value: 'gbk', label: '简体中文 (GBK)' },
+  { value: 'gb18030', label: '简体中文 (GB18030)' },
+  { value: 'gb2312', label: '简体中文 (GB 2312)' },
+  { value: 'cp950', label: '繁體中文 (Big5)' },
+  { value: 'big5hkscs', label: '繁體中文 (Big5-HKSCS)' },
+  { value: 'shiftjis', label: '日本語 (Shift JIS)' },
+  { value: 'eucjp', label: '日本語 (EUC-JP)' },
+  { value: 'euckr', label: '한국어 (EUC-KR)' },
+  { value: 'windows1252', label: 'Western (Windows 1252)' },
+  { value: 'iso88591', label: 'Western (ISO 8859-1)' },
+  { value: 'iso88593', label: 'Western (ISO 8859-3)' },
+  { value: 'iso885915', label: 'Western (ISO 8859-15)' },
+  { value: 'macroman', label: 'Western (Mac Roman)' },
+  { value: 'windows1250', label: 'Central European (Windows 1250)' },
+  { value: 'iso88592', label: 'Central European (ISO 8859-2)' },
+  { value: 'cp852', label: 'Central European (CP 852)' },
+  { value: 'windows1257', label: 'Baltic (Windows 1257)' },
+  { value: 'iso88594', label: 'Baltic (ISO 8859-4)' },
+  { value: 'iso885914', label: 'Celtic (ISO 8859-14)' },
+  { value: 'iso885910', label: 'Nordic (ISO 8859-10)' },
+  { value: 'cp865', label: 'Nordic DOS (CP 865)' },
+  { value: 'iso885913', label: 'Eesti (ISO 8859-13)' },
+  { value: 'windows1251', label: 'Кириллица (Windows 1251)' },
+  { value: 'koi8r', label: 'Кириллица (KOI8-R)' },
+  { value: 'koi8u', label: 'Кириллица (KOI8-U)' },
+  { value: 'koi8ru', label: 'Кириллица (KOI8-RU)' },
+  { value: 'iso88595', label: 'Кириллица (ISO 8859-5)' },
+  { value: 'cp866', label: 'Кириллица (CP 866)' },
+  { value: 'cp1125', label: 'Кириллица (CP 1125)' },
+  { value: 'koi8t', label: 'Тоҷикӣ (KOI8-T)' },
+  { value: 'windows1253', label: 'Ελληνικά (Windows 1253)' },
+  { value: 'iso88597', label: 'Ελληνικά (ISO 8859-7)' },
+  { value: 'windows1254', label: 'Türkçe (Windows 1254)' },
+  { value: 'iso88599', label: 'Türkçe (ISO 8859-9)' },
+  { value: 'cp857', label: 'Türkçe (CP 857)' },
+  { value: 'windows1255', label: 'עברית (Windows 1255)' },
+  { value: 'iso88598', label: 'עברית (ISO 8859-8)' },
+  { value: 'windows1256', label: 'العربية (Windows 1256)' },
+  { value: 'iso88596', label: 'العربية (ISO 8859-6)' },
+  { value: 'windows874', label: 'ไทย (Windows 874)' },
+  { value: 'iso885911', label: 'ละติน/ไทย (ISO 8859-11)' },
+  { value: 'iso885916', label: 'Română (ISO 8859-16)' },
+  { value: 'windows1258', label: 'Tiếng Việt (Windows 1258)' },
+  { value: 'cp437', label: 'DOS (CP 437)' },
+  { value: 'cp850', label: 'Western European DOS (CP 850)' },
+] as const;
+
+export function terminalEncodingOptionsWithAuto(autoLabel: string) {
+  return [{ value: 'auto', label: autoLabel }, ...terminalEncodingOptions];
+}

@@ -1,0 +1,10 @@
+[build]
+rustflags = ["-Awarnings"]
+
+[alias]
+# Development build: -dev binaries + DEVELOPMENT cfg (per-crate `dev` feature,
+# cfg emitted by each crate's build.rs). Production build: plain cargo build.
+dev = "build --features dev"
+
+[net]
+git-fetch-with-cli = true

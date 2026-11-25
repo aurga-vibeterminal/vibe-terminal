@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AURGA Vibe Terminal</title>
+    <script>
+      // Anti-flash theme bootstrap. Mirrors src/theme-url.ts + ThemeProvider:
+      // URL params (?theme=, ?colormode= — from the mobile client) win over
+      // localStorage, which wins over the OS preference.
+      (function () {
+        var root = document.documentElement;
+        try {
+          var params = new URLSearchParams(window.location.search);
+
+          // Window theme (?theme=default|frost|aurora|nebula|anime|cosmos|cyber|inkpaint)
+          // "vibe" is the former name of the default theme — kept as an alias.
+          var themes = ['default', 'frost', 'aurora', 'nebula', 'anime', 'cosmos', 'cyber', 'inkpaint'];
+          function normTheme(v) {
+            var t = (v || '').trim().toLowerCase();
+            if (t === 'vibe') return 'default';
+            return themes.indexOf(t) >= 0 ? t : null;
+          }
+          var windowTheme = normTheme(params.get('theme'));
+          if (!windowTheme) {
+            windowTheme = normTheme(localStorage.getItem('vt-window-theme'));
+          }
+          if (windowTheme) {
+            // Attribute selects the palette; "aurora" has no dedicated block
+            // because :root/.dark already define the Aurora default.
+            root.setAttribute('data-window-theme', windowTheme);
+            try { localStorage.setItem('vt-window-theme', windowTheme); } catch (e) {}
+          }
+
+          // Color mode (?colormode=light|dark|system, case-insensitive)
+          var modeParam = (params.get('colormode') || '').trim().toLowerCase();
+          var mode =
+            modeParam === 'light' || modeParam === 'dark' || modeParam === 'system'
+              ? modeParam
+              : null;
+          if (!mode) {
+            mode = localStorage.getItem('vt-color-mode');
+            if (mode !== 'light' && mode !== 'dark' && mode !== 'system') {
+              var legacy = localStorage.getItem('vt-theme');
+              mode = legacy === 'light' || legacy === 'dark' ? legacy : 'system';
+            }
+          }
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var appearance =
+            mode === 'light' || mode === 'dark' ? mode : prefersDark ? 'dark' : 'light';
+          root.classList.add(appearance);
+          try { localStorage.setItem('vt-color-mode', mode); } catch (e) {}
+        } catch (e) {
+          document.documentElement.classList.add(
+            window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+          );
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // Legacy-browser fallback. The app bundle targets ES2020+ (optional
+      // chaining, nullish coalescing). Windows 10 1809's stock Edge (EdgeHTML
+      // 44) and IE11 execute this classic script but cannot parse the module
+      // bundle — without this they die on SCRIPT5022 and show a blank page.
+      // Keep this script strictly ES5: no arrow functions, no let/const, and
+      // keep every catch binding used so a minifier can never rewrite it to
+      // catch{} (ES2019). Vite 6 leaves classic inline scripts untouched, but
+      // stay defensive in case a future version minifies them.
+      (function () {
+        var modern = false;
+        try {
+          // ES2020 syntax probe — the modern syntax lives in the string
+          // literal, so this file itself stays ES5-parseable on legacy
+          // engines.
+          new Function('a', 'return a?.b ?? null');
+          modern = true;
+        } catch (e) {
+          // Side-effectful use of e keeps the catch binding minifier-proof.
+          window.__vtBrowserProbe = String((e && e.message) || e);
+        }
+        if (modern) return;
+        var root = document.getElementById('root');
+        if (!root) return;
+        var box = document.createElement('div');
+        box.setAttribute(
+          'style',
+          [
+            'min-height:100vh',
+            'display:flex',
+            'align-items:center',
+            'justify-content:center',
+            'background:#0b0e14',
+            'color:#e6e9f0',
+            'font:14px/1.7 system-ui,-apple-system,Segoe UI,Roboto,sans-serif',
+            'padding:24px',
+            'box-sizing:border-box',
+            'text-align:center',
+          ].join(';')
+        );
+        box.innerHTML =
+          '<div style="max-width:560px">' +
+          '<div style="font-size:20px;font-weight:600;margin-bottom:12px">Browser not supported</div>' +
+          '<p style="margin:0 0 20px">This browser (legacy Edge / Internet Explorer) cannot run the AURGA Vibe Terminal Web UI. Please install the current Microsoft Edge, Chrome, or Firefox, then reopen this address.</p>' +
+          '<div>' +
+          '<a href="https://www.microsoft.com/edge" style="color:#7aa2f7" target="_blank" rel="noreferrer">Microsoft Edge</a>' +
+          ' &nbsp;·&nbsp; ' +
+          '<a href="https://www.google.com/chrome/" style="color:#7aa2f7" target="_blank" rel="noreferrer">Google Chrome</a>' +
+          ' &nbsp;·&nbsp; ' +
+          '<a href="https://www.mozilla.org/firefox/" style="color:#7aa2f7" target="_blank" rel="noreferrer">Firefox</a>' +
+          '</div>' +
+          '</div>';
+        root.appendChild(box);
+      })();
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

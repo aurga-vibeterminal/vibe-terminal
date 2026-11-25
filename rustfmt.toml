@@ -1,0 +1,9 @@
+# Keep formatting deterministic across Linux, macOS, and Windows.
+edition = "2021"
+style_edition = "2021"
+newline_style = "Unix"
+max_width = 100
+hard_tabs = false
+tab_spaces = 4
+use_small_heuristics = "Default"
+

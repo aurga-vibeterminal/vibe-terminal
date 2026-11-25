@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Windows ConPTY / OpenConsole",
+    "version": "1.23.251008001",
+    "license": "MIT",
+    "repository": "https://github.com/microsoft/terminal",
+    "licenseFile": "crates/vterm-server/third-party/conpty/LICENSE.txt",
+    "note": "conpty.dll and OpenConsole.exe (win10-x64 / win10-arm64) copied into release layouts by build.bat and packaging/windows/package.bat"
+  }
+]

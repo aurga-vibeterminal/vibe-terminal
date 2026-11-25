@@ -1,0 +1,7 @@
+[toolchain]
+# rustfmt output can change between Rust releases. Keep every development
+# platform and CI on the same formatter version.
+channel = "1.96.0"
+components = ["rustfmt"]
+profile = "minimal"
+

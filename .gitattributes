@@ -1,0 +1,51 @@
+# Line-ending policy. rustfmt is configured with newline_style = "Unix"
+# (rustfmt.toml), so it rewrites every Rust file with LF endings on all
+# platforms. With core.autocrlf=true and no attributes, that leaves the
+# working tree LF while git expects CRLF — every fmt-touched file then
+# shows up as "modified" in git status with an empty diff. Declaring the
+# endings here keeps the working tree, the index, and the formatters in
+# agreement.
+
+# Default: let git classify text vs binary; text files follow the
+# platform's core.autocrlf setting unless a rule below overrides it.
+* text=auto
+
+# Rust sources: LF everywhere (rustfmt newline_style = "Unix").
+*.rs text eol=lf
+
+# Shell scripts: LF (Git Bash / WSL / macOS / Linux).
+*.sh text eol=lf
+
+# Extensionless docker host entry points (run by bash in WSL/Linux) and
+# Dockerfiles (their RUN lines execute in sh): LF everywhere, even on
+# Windows checkouts, or bash fails with '$'\r': command not found'.
+docker/build* text eol=lf
+docker/Dockerfile* text eol=lf
+
+# Windows batch files: CRLF (cmd.exe parsing quirks with LF).
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Web UI toolchain (prettier / eslint / vite conventions: LF).
+*.js   text eol=lf
+*.jsx  text eol=lf
+*.ts   text eol=lf
+*.tsx  text eol=lf
+*.css  text eol=lf
+*.html text eol=lf
+*.json text eol=lf
+
+# Misc config/docs: LF.
+*.toml text eol=lf
+*.md   text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+
+# Binaries: never normalize.
+*.pfx  binary
+*.png  binary
+*.ico  binary
+*.icns binary
+*.dll  binary
+*.exe  binary
+*.zip  binary

@@ -1,0 +1,744 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Native widgets (scrollbars, form controls) follow the theme — without
+     this the browser renders light scrollbars on dark panels. */
+  color-scheme: light;
+
+  /* Aurora Light Mode Tokens */
+  --color-warm-black: #08111f;
+  --color-golden-cream: #f7faff;
+  --color-warm-ivory: #edf4ff;
+  --color-amber-gold: #43d56f;
+  --color-deep-olive: #617085;
+  --color-warm-khaki: #9aa8ba;
+  --color-golden-sand: #c0cce0;
+  --color-pale-sand: #dfe8f4;
+  --color-warm-taupe: #8a9ab5;
+  --color-error: #ff4d4f;
+  --color-success: #43d56f;
+  --color-warning: #ffb43c;
+  --color-info: #43d56f;
+
+  /* Extended semantic tokens */
+  --color-bg-inset: #e0e8f2;
+  --color-bg-active: #cdd8e8;
+  --color-border-subtle: #d5dfe8;
+  --color-text-inverse: #ffffff;
+  --color-accent-hover: #2fba58;
+  --color-accent-subtle: #e6f9ee;
+  --color-accent-text: #2aad54;
+
+  /* Semantic mapped vars */
+  --color-bg: var(--color-golden-cream);
+  --color-surface: var(--color-golden-cream);
+  --color-surface-2: var(--color-pale-sand);
+  --color-text: var(--color-warm-black);
+  --color-text-muted: var(--color-deep-olive);
+  --color-text-subtle: var(--color-warm-khaki);
+  --color-border: var(--color-golden-sand);
+  --color-border-strong: var(--color-deep-olive);
+  --color-focus-ring: var(--color-amber-gold);
+  --color-accent: var(--color-amber-gold);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --color-warm-black: #f5fbff;
+  --color-golden-cream: #071017;
+  --color-warm-ivory: #101a22;
+  --color-amber-gold: #43d56f;
+  --color-deep-olive: #9baab7;
+  --color-warm-khaki: #6f7d88;
+  --color-golden-sand: #2a3a4a;
+  --color-pale-sand: #1e2c38;
+  --color-warm-taupe: #4a5a6a;
+  --color-error: #ff4d4f;
+  --color-success: #43d56f;
+  --color-warning: #ffb43c;
+  --color-info: #43d56f;
+
+  /* Extended semantic tokens */
+  --color-bg-inset: #050b11;
+  --color-bg-active: #283848;
+  --color-border-subtle: #1e2c38;
+  --color-text-inverse: #071017;
+  --color-accent-hover: #55e880;
+  --color-accent-subtle: rgba(67, 213, 111, 0.13);
+  --color-accent-text: #43d56f;
+
+  /* Semantic mapped vars */
+  --color-bg: var(--color-golden-cream);
+  --color-surface: var(--color-golden-cream);
+  --color-surface-2: var(--color-pale-sand);
+  --color-text: var(--color-warm-black);
+  --color-text-muted: var(--color-deep-olive);
+  --color-text-subtle: var(--color-warm-khaki);
+  --color-border: var(--color-golden-sand);
+  --color-border-strong: var(--color-deep-olive);
+}
+
+/* ══════════════════════════════════════════════════════════════════════ */
+/* Window Themes — mirror the desktop client / prototype themes.css.     */
+/* Applied via `data-window-theme` on <html>, combined with the existing  */
+/* `.dark` class for the dark variant. The default (no attribute, or     */
+/* "aurora") keeps the Aurora palette defined in :root / .dark above.    */
+/* Token mapping: --color-golden-cream=bg-base, --color-warm-ivory=bg-subtle, */
+/* --color-pale-sand=bg-hover, --color-warm-black=text-primary,          */
+/* --color-deep-olive=text-secondary, --color-warm-khaki=text-tertiary,  */
+/* --color-golden-sand=border-default, --color-warm-taupe=border-strong, */
+/* --color-amber-gold=accent.                                            */
+/* ══════════════════════════════════════════════════════════════════════ */
+
+/* ── Default (formerly "vibe") — warm espresso + amber gold ────────── */
+[data-window-theme='default']:not(.dark) {
+  --color-warm-black: #1e1a13;
+  --color-golden-cream: #fffcf3;
+  --color-warm-ivory: #fff9ee;
+  --color-amber-gold: #e09110;
+  --color-deep-olive: #383426;
+  --color-warm-khaki: #928d74;
+  --color-golden-sand: #c8c1a3;
+  --color-pale-sand: #efe9d8;
+  --color-warm-taupe: #928d74;
+  --color-error: #bf3529;
+  --color-success: #2d7d46;
+  --color-warning: #c47a0a;
+  --color-info: #2d6b9e;
+  --color-bg-inset: #f5f0e3;
+  --color-bg-active: #e2dcc8;
+  --color-border-subtle: #d4cdb5;
+  --color-text-inverse: #1e1a13;
+  --color-accent-hover: #c47a0a;
+  --color-accent-subtle: #fef3e0;
+  --color-accent-text: #b87200;
+}
+
+[data-window-theme='default'].dark {
+  --color-warm-black: #f0ecdf;
+  --color-golden-cream: #181510;
+  --color-warm-ivory: #1b1812;
+  --color-amber-gold: #e09110;
+  --color-deep-olive: #c8c1a3;
+  --color-warm-khaki: #8a8568;
+  --color-golden-sand: #494634;
+  --color-pale-sand: #2d2a1e;
+  --color-warm-taupe: #595545;
+  --color-error: #d94040;
+  --color-success: #3da55c;
+  --color-warning: #d4940a;
+  --color-info: #5a9fd4;
+  --color-bg-inset: #13110c;
+  --color-bg-active: #3a3628;
+  --color-border-subtle: #3a3628;
+  --color-text-inverse: #181510;
+  --color-accent-hover: #f0a030;
+  --color-accent-subtle: #2d2518;
+  --color-accent-text: #e09110;
+}
+
+/* ── Frost — cool chalk blue on white / graphite ───────────────────── */
+[data-window-theme='frost']:not(.dark) {
+  --color-warm-black: #1d1d1f;
+  --color-golden-cream: #ffffff;
+  --color-warm-ivory: #f5f5f7;
+  --color-amber-gold: #5a9fd4;
+  --color-deep-olive: #424245;
+  --color-warm-khaki: #86868b;
+  --color-golden-sand: #c7c7cc;
+  --color-pale-sand: #eaf1f6;
+  --color-warm-taupe: #9cb3c4;
+  --color-error: #bf3529;
+  --color-success: #2d7d46;
+  --color-warning: #c47a0a;
+  --color-info: #2d6b9e;
+  --color-bg-inset: #e8e8ed;
+  --color-bg-active: #dae7f1;
+  --color-border-subtle: #d1d1d6;
+  --color-text-inverse: #ffffff;
+  --color-accent-hover: #4a8fc4;
+  --color-accent-subtle: #ecf3f9;
+  --color-accent-text: #2d6b9e;
+}
+
+[data-window-theme='frost'].dark {
+  --color-warm-black: #e0e0e0;
+  --color-golden-cream: #1e1e1e;
+  --color-warm-ivory: #252526;
+  --color-amber-gold: #7ab5e0;
+  --color-deep-olive: #a0a0a0;
+  --color-warm-khaki: #6e6e6e;
+  --color-golden-sand: #404040;
+  --color-pale-sand: #2c3d49;
+  --color-warm-taupe: #485e70;
+  --color-error: #d94040;
+  --color-success: #3da55c;
+  --color-warning: #d4940a;
+  --color-info: #5a9fd4;
+  --color-bg-inset: #181818;
+  --color-bg-active: #30485a;
+  --color-border-subtle: #333333;
+  --color-text-inverse: #1e1e1e;
+  --color-accent-hover: #9cc8eb;
+  --color-accent-subtle: #1a2e3d;
+  --color-accent-text: #9cc8eb;
+}
+
+/* ── Nebula — navy-black with purple/cyan accents ──────────────────── */
+[data-window-theme='nebula']:not(.dark) {
+  --color-warm-black: #111827;
+  --color-golden-cream: #f5f8fc;
+  --color-warm-ivory: #f8fafd;
+  --color-amber-gold: #7c3aed;
+  --color-deep-olive: #475569;
+  --color-warm-khaki: #8190a3;
+  --color-golden-sand: #cbd5e1;
+  --color-pale-sand: #eef3fa;
+  --color-warm-taupe: #94a3b8;
+  --color-error: #dc2626;
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-info: #0891b2;
+  --color-bg-inset: #eaf0f8;
+  --color-bg-active: #e3eaf2;
+  --color-border-subtle: #e3eaf2;
+  --color-text-inverse: #ffffff;
+  --color-accent-hover: #6d28d9;
+  --color-accent-subtle: #ede9fe;
+  --color-accent-text: #7c3aed;
+}
+
+[data-window-theme='nebula'].dark {
+  --color-warm-black: #f4f7fb;
+  --color-golden-cream: #0d1118;
+  --color-warm-ivory: #121821;
+  --color-amber-gold: #9b5cff;
+  --color-deep-olive: #b7c0cf;
+  --color-warm-khaki: #7c8798;
+  --color-golden-sand: #303845;
+  --color-pale-sand: #202936;
+  --color-warm-taupe: #495060;
+  --color-error: #ff5f57;
+  --color-success: #62e44b;
+  --color-warning: #ffd166;
+  --color-info: #21d7e8;
+  --color-bg-inset: #060b12;
+  --color-bg-active: #303845;
+  --color-border-subtle: #202936;
+  --color-text-inverse: #0d1118;
+  --color-accent-hover: #b07cff;
+  --color-accent-subtle: #1a1230;
+  --color-accent-text: #9b5cff;
+}
+
+/* ── Anime — pink-white / purple-black with sakura pink ────────────── */
+[data-window-theme='anime']:not(.dark) {
+  --color-warm-black: #1a0a12;
+  --color-golden-cream: #fff5f8;
+  --color-warm-ivory: #fff0f4;
+  --color-amber-gold: #fb7299;
+  --color-deep-olive: #5a3048;
+  --color-warm-khaki: #9a6888;
+  --color-golden-sand: #f0b8ca;
+  --color-pale-sand: #ffd9e4;
+  --color-warm-taupe: #e890a8;
+  --color-error: #ff4d4f;
+  --color-success: #52c41a;
+  --color-warning: #faad14;
+  --color-info: #00a1d6;
+  --color-bg-inset: #ffe8ef;
+  --color-bg-active: #ffccd8;
+  --color-border-subtle: #f8d0dc;
+  --color-text-inverse: #ffffff;
+  --color-accent-hover: #f55b86;
+  --color-accent-subtle: #fff0f4;
+  --color-accent-text: #d44a72;
+}
+
+[data-window-theme='anime'].dark {
+  --color-warm-black: #f5ecf8;
+  --color-golden-cream: #0e0a14;
+  --color-warm-ivory: #14101c;
+  --color-amber-gold: #fb7299;
+  --color-deep-olive: #c0a8d0;
+  --color-warm-khaki: #8870a0;
+  --color-golden-sand: #32284a;
+  --color-pale-sand: #241c30;
+  --color-warm-taupe: #4a3a68;
+  --color-error: #ff6b81;
+  --color-success: #69db7c;
+  --color-warning: #ffd43b;
+  --color-info: #74c0fc;
+  --color-bg-inset: #0a0710;
+  --color-bg-active: #2e2440;
+  --color-border-subtle: #241c30;
+  --color-text-inverse: #0e0a14;
+  --color-accent-hover: #ff8cab;
+  --color-accent-subtle: rgba(251, 114, 153, 0.12);
+  --color-accent-text: #fb7299;
+}
+
+/* ── Cosmos — starfield navy with electric blue ────────────────────── */
+[data-window-theme='cosmos']:not(.dark) {
+  --color-warm-black: #08112f;
+  --color-golden-cream: #f5f8ff;
+  --color-warm-ivory: #ecf2ff;
+  --color-amber-gold: #2e6bff;
+  --color-deep-olive: #34446f;
+  --color-warm-khaki: #6b78a0;
+  --color-golden-sand: #b3c4f0;
+  --color-pale-sand: #dae6ff;
+  --color-warm-taupe: #6f95ff;
+  --color-error: #e5484d;
+  --color-success: #20b86f;
+  --color-warning: #d88a13;
+  --color-info: #2e7dff;
+  --color-bg-inset: #e1eaff;
+  --color-bg-active: #c8d8ff;
+  --color-border-subtle: #d2ddfb;
+  --color-text-inverse: #ffffff;
+  --color-accent-hover: #1f55e0;
+  --color-accent-subtle: rgba(46, 107, 255, 0.12);
+  --color-accent-text: #1f4fd6;
+}
+
+[data-window-theme='cosmos'].dark {
+  --color-warm-black: #f5f8ff;
+  --color-golden-cream: #070b1f;
+  --color-warm-ivory: #0d1330;
+  --color-amber-gold: #3a7aff;
+  --color-deep-olive: #b8c4e8;
+  --color-warm-khaki: #7483b8;
+  --color-golden-sand: #243260;
+  --color-pale-sand: #1a2350;
+  --color-warm-taupe: #3d5a9e;
+  --color-error: #ff5d73;
+  --color-success: #3ad99a;
+  --color-warning: #ffc94d;
+  --color-info: #42e8ff;
+  --color-bg-inset: #050818;
+  --color-bg-active: #243260;
+  --color-border-subtle: #161d3f;
+  --color-text-inverse: #070b1f;
+  --color-accent-hover: #5a93ff;
+  --color-accent-subtle: rgba(58, 122, 255, 0.18);
+  --color-accent-text: #6ea0ff;
+}
+
+/* ── Cyber — server-aisle teal with hologram cyan ─────────────────── */
+[data-window-theme='cyber']:not(.dark) {
+  --color-warm-black: #052831;
+  --color-golden-cream: #f0f9fb;
+  --color-warm-ivory: #e6f4f7;
+  --color-amber-gold: #0891b2;
+  --color-deep-olive: #315e6b;
+  --color-warm-khaki: #6f98a4;
+  --color-golden-sand: #a6cfda;
+  --color-pale-sand: #d3ebf1;
+  --color-warm-taupe: #6fa9ba;
+  --color-error: #dc2626;
+  --color-success: #0d9e6d;
+  --color-warning: #d97706;
+  --color-info: #2e7dff;
+  --color-bg-inset: #daedf2;
+  --color-bg-active: #bfe0e9;
+  --color-border-subtle: #cbe4eb;
+  --color-text-inverse: #ffffff;
+  --color-accent-hover: #0e7490;
+  --color-accent-subtle: rgba(8, 145, 178, 0.12);
+  --color-accent-text: #0e7490;
+}
+
+[data-window-theme='cyber'].dark {
+  --color-warm-black: #e4f8fb;
+  --color-golden-cream: #071419;
+  --color-warm-ivory: #0b1d24;
+  --color-amber-gold: #22d3ee;
+  --color-deep-olive: #9cc9d4;
+  --color-warm-khaki: #5e8c99;
+  --color-golden-sand: #1f3d4a;
+  --color-pale-sand: #17323d;
+  --color-warm-taupe: #33687c;
+  --color-error: #ff5d6c;
+  --color-success: #2fe0a4;
+  --color-warning: #ffc94d;
+  --color-info: #45a8ff;
+  --color-bg-inset: #040e12;
+  --color-bg-active: #1f414f;
+  --color-border-subtle: #15303b;
+  --color-text-inverse: #071419;
+  --color-accent-hover: #5ee7f8;
+  --color-accent-subtle: rgba(34, 211, 238, 0.14);
+  --color-accent-text: #46e0f4;
+}
+
+/* ── Inkpaint — 宣纸 rice paper + 朱砂 cinnabar ───────────────────── */
+[data-window-theme='inkpaint']:not(.dark) {
+  --color-warm-black: #2b2520;
+  --color-golden-cream: #faf6ee;
+  --color-warm-ivory: #f3ede0;
+  --color-amber-gold: #b8413a;
+  --color-deep-olive: #5c5044;
+  --color-warm-khaki: #8c7e6d;
+  --color-golden-sand: #c9bda3;
+  --color-pale-sand: #f3ebe8;
+  --color-warm-taupe: #b47864;
+  --color-error: #a8332a;
+  --color-success: #4a7c59;
+  --color-warning: #c08a3e;
+  --color-info: #3d6b8a;
+  --color-bg-inset: #ebe3d2;
+  --color-bg-active: #ebddd6;
+  --color-border-subtle: #d8cdb5;
+  --color-text-inverse: #faf6ee;
+  --color-accent-hover: #a03530;
+  --color-accent-subtle: #f7ece9;
+  --color-accent-text: #8a2e29;
+}
+
+[data-window-theme='inkpaint'].dark {
+  --color-warm-black: #e8e0cf;
+  --color-golden-cream: #1a1714;
+  --color-warm-ivory: #221e1a;
+  --color-amber-gold: #d65f56;
+  --color-deep-olive: #b8aa92;
+  --color-warm-khaki: #837560;
+  --color-golden-sand: #3a332b;
+  --color-pale-sand: #302521;
+  --color-warm-taupe: #855447;
+  --color-error: #e0554d;
+  --color-success: #6ba87b;
+  --color-warning: #d9a455;
+  --color-info: #6b9fc0;
+  --color-bg-inset: #131110;
+  --color-bg-active: #3e2d28;
+  --color-border-subtle: #2e2823;
+  --color-text-inverse: #1a1714;
+  --color-accent-hover: #e07a72;
+  --color-accent-subtle: #391d18;
+  --color-accent-text: #e07a72;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 13px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Typography: Inter for headings (Vibe Terminal uses Inter throughout) */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.04;
+    letter-spacing: 0px;
+  }
+
+  h1 {
+    font-size: 32px;
+    line-height: 1.04;
+  }
+
+  h2 {
+    font-size: 24px;
+    line-height: 1.04;
+    font-weight: 500;
+  }
+
+  h3 {
+    font-size: 20px;
+    line-height: normal;
+    letter-spacing: -0.48px;
+  }
+
+  h4 {
+    font-size: 16px;
+    line-height: 1.20;
+    letter-spacing: -0.2px;
+    font-weight: 500;
+  }
+
+  h5, h6 {
+    font-size: 14px;
+    line-height: 1.25;
+    font-weight: 500;
+  }
+
+  /* Links */
+  a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--color-accent);
+  }
+
+  /* Inputs */
+  input, select, textarea {
+    background-color: var(--color-bg-inset);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 180ms ease;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--color-accent);
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: var(--color-text-subtle);
+  }
+
+  input:disabled, select:disabled, textarea:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Number input: hide browser-default spinners */
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+@layer components {
+  /* Primary Button: Accent bg, white text */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-accent);
+    color: #ffffff;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1.00;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--color-accent);
+    cursor: pointer;
+    transition: opacity 180ms ease;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    opacity: 0.90;
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Secondary Button: Surface bg with border */
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1.00;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--color-border-subtle);
+    cursor: pointer;
+    transition: background-color 180ms ease;
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    background-color: var(--color-border);
+  }
+
+  .btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Danger Button: Error red bg, white text */
+  .btn-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-error);
+    color: #ffffff;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1.00;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--color-error);
+    cursor: pointer;
+    transition: opacity 180ms ease;
+  }
+
+  .btn-danger:hover:not(:disabled) {
+    opacity: 0.90;
+  }
+
+  .btn-danger:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Card: Border-only elevation, no shadow */
+  .card {
+    background-color: var(--color-surface);
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+  }
+
+  /* Larger card variant */
+  .card-lg {
+    background-color: var(--color-surface);
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+  }
+
+  /* Pill button variant */
+  .btn-pill {
+    border-radius: 9999px;
+  }
+}
+
+@layer utilities {
+  /* Thin theme-aware scrollbar for compact panels (dropdown lists, drawers).
+     Native scrollbars — especially on Windows — are wide and, without the
+     color-scheme hint above, render light on dark panels. */
+  .vt-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-warm-taupe) transparent;
+  }
+
+  .vt-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .vt-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .vt-scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--color-warm-taupe);
+    border-radius: 9999px;
+  }
+
+  .vt-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-deep-olive);
+  }
+
+  /* Typography utilities */
+  .font-inter {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Heading utilities */
+  .heading-display {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1.04;
+    letter-spacing: 0px;
+    color: var(--color-text);
+  }
+
+  .heading-section {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: 0px;
+    color: var(--color-text);
+  }
+
+  .heading-feature {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.48px;
+    color: var(--color-text);
+  }
+
+  .heading-sub {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.20;
+    letter-spacing: -0.2px;
+    color: var(--color-text);
+  }
+
+  /* Body text utilities */
+  .text-body {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.50;
+    color: var(--color-text);
+  }
+
+  .text-body-light {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.50;
+    color: var(--color-text-subtle);
+  }
+
+  .text-caption {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.43;
+    color: var(--color-text-subtle);
+  }
+
+  .text-micro {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.00;
+    color: var(--color-text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Focus ring utility */
+  .focus-ring:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 2px var(--color-accent);
+  }
+}

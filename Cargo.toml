@@ -1,0 +1,142 @@
+[workspace]
+members = [
+    "crates/vterm-common",
+    "crates/vterm-core",
+    "crates/vterm-emulator",
+    "crates/vterm-transport",
+    "crates/vterm-server",
+    "crates/vterm-agent",
+    "crates/vterm-cli",
+    "crates/vterm-build",
+]
+resolver = "2"
+
+[workspace.package]
+version = "1.0.1"
+edition = "2021"
+rust-version = "1.85.0"
+authors = ["AURGA CO., LIMITED"]
+license = "MIT"
+
+[workspace.dependencies]
+# Async runtime
+tokio = { version = "1.35", features = ["full"] }
+tokio-util = { version = "0.7", features = ["codec"] }
+futures = "0.3"
+futures-util = "0.3"
+tokio-stream = "0.1"
+async-stream = "0.3"
+bytes = "1"
+# rustls-backed wss client/server support. native-tls is deliberately NOT
+# part of the workspace: every platform (Windows included) uses rustls so
+# the binaries never link the system OpenSSL (libssl.so.3 on Linux) and
+# avoid SChannel/Keychain quirks entirely.
+tokio-tungstenite = { version = "0.24", features = ["connect", "rustls-tls-native-roots"] }
+socket2 = "0.5"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+
+# Text encoding (GBK / Big5 / Shift JIS / ... decode support)
+encoding_rs = "0.8"
+
+# Error handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Compile-time asset embedding (vterm-server's embedded wwwroot).
+# `debug-embed` makes debug builds embed too, matching release behaviour:
+# a missing asset folder is a compile error, never a runtime surprise.
+rust-embed = { version = "8.12", features = ["debug-embed"] }
+
+# Compression
+flate2 = { version = "1", features = ["rust_backend"] }
+zstd = "0.13"
+zip = { version = "2", default-features = false, features = ["deflate", "bzip2", "xz", "zstd"] }
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+sha2 = "0.10"
+
+# UUID
+uuid = { version = "1.6", features = ["v4", "serde"] }
+
+# Cross-process singleton enforcement (used by vterm-server)
+single-instance = "0.3"
+
+# Terminal parsing
+vte = "0.15"
+unicode-width = "0.2"
+
+# Encryption (Noise Protocol)
+snow = "0.9"
+
+# PTY
+portable-pty = "0.8"
+
+# CLI
+clap = { version = "4.5", features = ["derive", "env"] }
+crossterm = "0.28"
+
+# MCP (Model Context Protocol)
+rmcp = { version = "1.6", features = ["server", "transport-streamable-http-server", "transport-streamable-http-server-session"] }
+axum = { version = "0.8", features = ["ws"] }
+schemars = "1"
+
+# HTTP / TLS (used by vterm-asr-server and others)
+hyper-util = { version = "0.1", features = ["server-auto", "service", "tokio"] }
+tokio-rustls = { version = "0.26", default-features = false, features = ["ring"] }
+# `dangerous_configuration`-style custom verifiers are always available in
+# rustls 0.23; ring is the selected crypto provider.
+rustls = { version = "0.23", default-features = false, features = ["ring", "std"] }
+rustls-pemfile = "2"
+# OS certificate store loading for the rustls clients (reads /etc/ssl/certs
+# etc. — pure file reading, no OpenSSL linkage).
+rustls-native-certs = "0.8"
+# Managed self-signed development identities: generated in-process with rcgen
+# (ring), validity/SAN checked with x509-parser. Replaces the old per-platform
+# openssl / PowerShell PFX generators.
+rcgen = { version = "0.14", features = ["x509-parser"] }
+time = "0.3"
+x509-parser = "0.18"
+
+open = "5"
+dirs = "5"
+tempfile = "3"
+
+# Shared across crates
+vterm-common = { path = "crates/vterm-common" }
+vterm-core = { path = "crates/vterm-core", default-features = true }
+vterm-emulator = { path = "crates/vterm-emulator" }
+vterm-transport = { path = "crates/vterm-transport" }
+vterm-agent = { path = "crates/vterm-agent" }
+# Build-script helpers (git commit stamp, Windows version resource)
+vterm-build = { path = "crates/vterm-build" }
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+
+# Xcode 27's strip can produce proc-macro dylibs that macOS 27's dyld rejects.
+[profile.release.build-override]
+strip = "none"
+
+[profile.release.package.rquickjs-macro]
+strip = "none"
+
+# Tests inherit release optimization, but disable LTO and use parallel codegen
+# to avoid rebuilding the dependency tree in the slowest configuration.
+# Use `cargo test --profile dev` for debug builds.
+[profile.test]
+inherits = "release"
+lto = false
+codegen-units = 16
+
+[profile.dev]
+opt-level = 0
+debug = true
+
