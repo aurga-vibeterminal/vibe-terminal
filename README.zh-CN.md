@@ -74,13 +74,20 @@ curl -fsSL https://vterminal.dev/install.sh | bash
 
 ## 源码仓库
 
-以下组件仓库正在筹备开源，链接会在对应仓库发布后开放访问。
+本仓库包含服务端（`crates/vterm-server`）、`vtermc` 命令行客户端（`crates/vterm-cli`）、agent 运行时（`crates/vterm-agent`）、Web UI（`webui/`）、Docker 构建环境和 Linux 打包脚本。桌面客户端以下载形式分发，见 [vterminal.dev](https://vterminal.dev/download)。共享基础库各自独立成库，以 git submodule 的形式放在 `crates/` 下：
 
-| 仓库 | 组件 | 状态 |
-| --- | --- | --- |
-| [vterm-emulator](https://github.com/aurga-vibeterminal/vterm-emulator) | 终端模拟 | 筹备发布中 |
-| [vterm-cli](https://github.com/aurga-vibeterminal/vterm-cli) | `vtermc` 命令行客户端 | 筹备发布中 |
-| [vterm-server](https://github.com/aurga-vibeterminal/vterm-server) | 自托管会话与设备服务端 | 筹备发布中 |
+| 仓库 | 组件 |
+| --- | --- |
+| [vterm-common](https://github.com/aurga-vibeterminal/vterm-common) | 共享辅助：诊断、延迟测量、私有 CA / TLS、系统代理检测 |
+| [vterm-core](https://github.com/aurga-vibeterminal/vterm-core) | 线协议、Noise 协议加密、PTY 处理、目录流 |
+| [vterm-emulator](https://github.com/aurga-vibeterminal/vterm-emulator) | 终端模拟：VT 解析、屏幕模型、回滚历史、选区 |
+| [vterm-transport](https://github.com/aurga-vibeterminal/vterm-transport) | 帧式、限长、加密的点对点消息传输 |
+
+克隆时请带上 submodule：
+
+```bash
+git clone --recurse-submodules https://github.com/aurga-vibeterminal/vibe-terminal
+```
 
 ## 反馈问题与功能建议
 

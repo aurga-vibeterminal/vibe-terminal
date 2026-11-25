@@ -74,13 +74,20 @@ The documentation is available in multiple languages on [vterminal.dev](https://
 
 ## Source repositories
 
-The following component repositories are being prepared for open source. Their links will become available as each repository is published.
+This repository holds the server (`crates/vterm-server`), the `vtermc` command-line client (`crates/vterm-cli`), the agent runtime (`crates/vterm-agent`), the Web UI (`webui/`), the Docker build environment and the Linux packaging scripts. The desktop client is distributed as a download from [vterminal.dev](https://vterminal.dev/download). The shared libraries live in their own repositories and are included as git submodules under `crates/`:
 
-| Repository | Component | Status |
-| --- | --- | --- |
-| [vterm-emulator](https://github.com/aurga-vibeterminal/vterm-emulator) | Terminal emulation | Preparing for publication |
-| [vterm-cli](https://github.com/aurga-vibeterminal/vterm-cli) | `vtermc` command-line client | Preparing for publication |
-| [vterm-server](https://github.com/aurga-vibeterminal/vterm-server) | Self-hosted session and device server | Preparing for publication |
+| Repository | Component |
+| --- | --- |
+| [vterm-common](https://github.com/aurga-vibeterminal/vterm-common) | Shared helpers: diagnostics, latency, private CA / TLS, system proxy detection |
+| [vterm-core](https://github.com/aurga-vibeterminal/vterm-core) | Wire protocol, Noise-protocol crypto, PTY handling, folder streaming |
+| [vterm-emulator](https://github.com/aurga-vibeterminal/vterm-emulator) | Terminal emulation: VT parsing, screen model, scrollback, selection |
+| [vterm-transport](https://github.com/aurga-vibeterminal/vterm-transport) | Framed, size-limited, encrypted peer-to-peer message transport |
+
+Clone with its submodules:
+
+```bash
+git clone --recurse-submodules https://github.com/aurga-vibeterminal/vibe-terminal
+```
 
 ## Reporting bugs and requesting features
 
