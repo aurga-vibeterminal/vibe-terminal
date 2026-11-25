@@ -4,3 +4,6 @@
 [submodule "crates/vterm-core"]
 	path = crates/vterm-core
 	url = https://github.com/aurga-vibeterminal/vterm-core.git
+[submodule "crates/vterm-emulator"]
+	path = crates/vterm-emulator
+	url = https://github.com/aurga-vibeterminal/vterm-emulator.git
